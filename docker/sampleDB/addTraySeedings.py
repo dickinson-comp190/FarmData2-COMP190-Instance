@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-# Creates the Planting assets and Seeding logs for all of the
+# Creates the Planting assets and Seeding logs for all of the 
 # direct seedings in the sample data.
 # The data for the plantings and seeding is in the sampleData/directSeedings.csv file.
 
@@ -12,10 +12,6 @@ from csv import reader
 from utils import *
 import sys
 import random
-import os
-
-# Get the hostname of the farmOS server.
-host = os.getenv('FD2_HOST')
 
 # Get lists of all of the recognized crops, fields and users for validation.
 cropMap = getCropMap()
@@ -35,7 +31,7 @@ def main():
     print("Adding Tray Seedings...")
 
     # ensure same random assignments if db is regeenrated.
-    random.seed(1)
+    random.seed(1)  
 
     # Get a list of the greenhouse ID's to randomly place trays
     # because FarmData doesn't have the data.
@@ -62,7 +58,7 @@ def validateRow(line, row):
     row[1] = validateUser(line, user, userMap)
     crop = row[3]
     row[3] = validateCrop(line, crop, cropMap)
-
+    
 def addPlanting(row):
     planting = {
         "name": row[2] + " " + row[3],
@@ -87,19 +83,14 @@ def addSeedings(row, plantingID, seedingTypeID):
     seedings = row[7].split('seeds;')
     seedingCount = 0
 
-    totalSeeds = int(row[4])
     totalFlats = float(row[5])
-    cellsPerFlat = int(row[6])
-
-    if cellsPerFlat == 0:
-        # if the cells/flat not given, assume one seed per cell.
-        row[6] = totalSeeds/totalFlats
-
-    if totalSeeds == 0:
+    totalSeeds = int(row[4])
+    if totalSeeds == 0:  
         # If seed count not given, assume one seed per tray cell.
+        cellsPerFlat = int(row[6])
         totalSeeds = totalFlats*cellsPerFlat
-
-    seedsPerFlat = totalSeeds/totalFlats
+   
+    seedsPerFlat = totalSeeds/totalFlats 
 
     for seeding in seedings:
         if (seeding.startswith('Seed Code:')):
@@ -109,19 +100,20 @@ def addSeedings(row, plantingID, seedingTypeID):
 
             for i in range(0, len(details), 2):
                 seedCode = details[i][11:].strip()
-                seedCount = int(details[i+1][:details[i+1].index(' ')])
+                seedCount = details[i+1][:details[i+1].index(' ')]
 
-                if seedCount == 0:
-                    # If seed counts are 0, assume equally distributed across seedings.
-                    # Not rounding results in <500> response status.
-                    seedCount = round(totalSeeds / len(seedings))
+                #print(seedCode + " *** " + seedCount)
 
-                row[4] = str(seedCount)
+                row[4] = seedCount
+                if seedCount == 0: 
+                    # If seed counts are 0, ssume equally distributed across seedings.
+                    seedCount = str(totalSeeds / len(seedings)) 
+
                 row[7] = seedCode
 
                 # Scale number of flats to account for multiple seedings in planting
                 # Not rounding results in <500> response status.
-                row[5] = str(round(seedCount / seedsPerFlat,2))
+                row[5] = str(round(int(seedCount) / seedsPerFlat,2))
 
                 addSeeding(row, plantingID, seedingTypeID)
         else:
@@ -135,7 +127,6 @@ def addSeedings(row, plantingID, seedingTypeID):
 def addSeeding(row, plantingID, seedingTypeID):
 
     # Pick some random values for things not in FarmData.
-    random.seed(1)  # ensure random hours are the same for testing purposes
     randomHours = random.randrange(1,15, 1)/10.0  # 0.1...1.5 hours
     randomGreenhouseID = random.choice(greenhouseIDs)
 
@@ -148,7 +139,7 @@ def addSeeding(row, plantingID, seedingTypeID):
             "value": row[9],
             "format": "farm_format"
         },
-        "asset": [{
+        "asset": [{ 
             "id": plantingID,   # Associated planting
             "resource": "farm_asset"
         }],
@@ -164,25 +155,25 @@ def addSeeding(row, plantingID, seedingTypeID):
         },
         "quantity": [
             {
-                "measure": "count",
+                "measure": "count", 
                 "value": row[4],  # number of seed planted
                 "unit": {
-                    "id": seedsID,
+                    "id": seedsID, 
                     "resource": "taxonomy_term"
                 },
                 "label": "Seeds planted"
             },
             {
-                "measure": "count",
+                "measure": "count", 
                 "value": row[5],  # number of flats
                 "unit": {
-                    "id": flatsID,
+                    "id": flatsID, 
                     "resource": "taxonomy_term"
                 },
                 "label": "Flats used"
             },
             {
-                "measure": "ratio",
+                "measure": "ratio", 
                 "value": row[6],  # cells per flat
                 "unit": {
                     "id": cellsPerFlatID,
@@ -191,7 +182,7 @@ def addSeeding(row, plantingID, seedingTypeID):
                 "label": "Cells/Flat"
             },
             {
-                "measure": "time",
+                "measure": "time", 
                 "value": randomHours,  # hours worked
                 "unit": {
                     "id": hoursID,
@@ -200,10 +191,10 @@ def addSeeding(row, plantingID, seedingTypeID):
                 "label": "Labor"
             },
             {
-                "measure": "count",
-                "value": 1,     # number of people (x Time = Total Time)
-                                # default 1 here because FarmData didn't record this.
-                                # Workers x Labor gives total time
+                "measure": "count", 
+                "value": 1,  # number of people (x Time = Total Time)
+                             # default 1 here because FarmData didn't record this.
+                             # Workers x Labor gives total time
                 "unit": {
                     "id": peopleID,
                     "resource": "taxonomy_term"
@@ -221,15 +212,15 @@ def addSeeding(row, plantingID, seedingTypeID):
             "resource": "user"
         }],
         "lot_number": row[7],
-        "data": json.dumps({
-            "crop_tid": cropMap[row[3]]
+        "data": json.dumps({ 
+            "crop_tid": cropMap[row[3]] 
         })
     }
 
     return addLog(seeding)
 
 def getGreenhouseIDs():
-    greenhouses = getAllPages("http://" + host + "/taxonomy_term.json?area_type=greenhouse")
+    greenhouses = getAllPages("http://localhost/taxonomy_term.json?area_type=greenhouse")
     greenhouseList = []
 
     for greenhouse in greenhouses:

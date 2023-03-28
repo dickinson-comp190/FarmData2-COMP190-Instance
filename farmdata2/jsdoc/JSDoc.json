@@ -1,8 +1,0 @@
-{
-  "plugins": [
-    "jsdoc-vuejs"
-  ],
-  "source": {
-    "includePattern": "\\.(vue|js)$"
-  }
-}

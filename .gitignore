@@ -1,20 +1,19 @@
 docker/db/*
-docker/._db
 docker/logo/tmp/**
 docker/logo/.htaccess
 
 .cache/*
 .config/*
 .npm/*
-**/node_modules
 
-**/cypress/screenshots/*
-**/cypress/videos/*
-**/cypress/downloads
+.theia/logs/*
+.theia/workspace-storage/*
+.theia/globalStorage/*
+.theia/recentworkspace.json
+
+farmdata2_modules/**/cypress/screenshots/*
+farmdata2_modules/**/cypress/videos/*
 
 **/__pycache__
 
-farmdata2/doc/
-
 .DS_Store
-.idea

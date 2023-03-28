@@ -8,52 +8,53 @@ There is a dedicated [Install _stream_](https://farmdata2.zulipchat.com/#narrow/
 
 ## User Install ##
 
-FarmData2 is currently in the early stages of development and thus is not ready for production use.  This section will be updated when FarmData2 has reached a state of development that is suitable for use in the field.
+FarmData2 is currently in the early stages of development and thus is not ready for independent use.  This section will be updated when FarmData2 has reached a state of development that is suitable for use.  In the meantime, please contact braught@dickinson.edu or allen@npfi.org for credentials if you would like to explore the trial instance available at [FarmData2 Trial](http://npfi.org/farmdata2/).  
 
 ## Developer Install ##
 
-Before beginning this install please review the [Code of Conduct](CODE_OF_CONDUCT.md) that sets the expectations for the FarmData2 community and the [License Information](LICENSE.md) that describes FarmData2's licensing.
+Before beginning this install please review the [CONTRIBUTING.md](CONTRIBUTING.md) document and in particular be sure to follow the links to the [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) that sets the expectations for the FarmData2 community.
+
+### Development Platform ###
+
+We recommend Ubuntu Linux as the development platform for FarmData2.  It is the development platform used by the core team and thus is the most well understood and most fully tested. Users of Windows and MacOS should consider using Ubuntu Linux within [Virtual Box](https://www.virtualbox.org/) as their development platform.  That said, developers experienced with tools like git, docker and docker-compose should not face any substantial barriers to development directly on Windows, MacOS or other Linux flavors.
+
+The following are some recommendations for setting up a development platform using Linux in VirtualBox:
+
+  - The FOSS guide to [Install Linux Inside Windows Using VirtualBox](https://itsfoss.com/install-linux-in-virtualbox/) is a good place to start if you are unfamiliar with this process. This is a guide for Windows, but works equally well for MacOS with a little adaptation.
+  - If your machine has 8GB or more of RAM [Ubuntu Desktop](https://ubuntu.com/download/desktop) is recommended with an allocation of at least 4GB of RAM to the virtual machine.
+  - If your machine has less than 8GB of RAM Ubuntu based [Linux Lite](https://www.linuxliteos.com/) is recommended with an allocation of half of the machine's RAM to the virtual machine.
+  - When creating your virtual machine:
+    - Allocate a virtual disk of at least 30GB.
+    - Set the Video Memory to 128 MB.
+   - __MacOS:__ If you are running VirtualBox on MacOS using a machine with a retina display the performance can be quite sluggish. [Launching VirtualBox in Low Resolution Mode](https://forums.virtualbox.org/viewtopic.php?f=8&t=90446&start=75#p470879) will resolve this issue.
 
 ### Prerequisites ###
 
-FarmData2 relies on a few prerequisites that will need to be installed on your computer. You will need to install:
-  - git
-  - docker Desktop
-  - TigerVNC Viewer
+FarmData2 relies on a few prerequisite programs that will need to be installed on your development platform. You will need to install
+  * git
+  * docker
+  * docker-compose
 
-Full installation details for these tools are provided by the projects themselves as described and linked below:
+Under Ubuntu Linux these tools can most easily be installed using the [apt](https://wiki.debian.org/AptCLI) or [synaptic](https://wiki.debian.org/Synaptic) package managers.  You might read the It's FOSS Complete guide to [Using apt Commands in Linux](https://itsfoss.com/apt-command-guide/) if you are unfamiliar with apt.
 
-  - [Install git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-    - Test your install using the command: `git --version`
-  - Installing Docker Desktop
-    - Installation
-      - For Windows:
-        - First [install *WSL* (the *Windows Subsystem for Linux*)](https://learn.microsoft.com/en-us/windows/wsl/install).
-        - Test that you can *Open an WSL Terminal* by:
-          - Open a PowerShell
-          - Use the command `wsl`
-            - The command prompt should change to a Linux prompt instead of a PowerShell prompt.
-          - You'll be using a *WSL Terminal* for many of the steps below.
-        - Then follow the instructions for installing [Docker Desktop for Windows](https://docs.docker.com/desktop/install/windows-install/). Be sure to follow the directions for the "WSL 2 backend" (not the "Hyper-V backend").
-      - For MacOS:
-        - Follow the instructions for installing [Docker Desktop for Mac](https://docs.docker.com/desktop/install/mac-install/). Be sure to choose chose "Mac with Intel Chip" or "Mac with Apple Silicon" as appropriate for your Mac.  If you are unsure, choose "About this Mac" from the Apple menu and check which "Chip" is in your Mac (Intel or Apple).
-      - For Linux:
-        - Follow the instructions for installing [Docker Desktop for Linux](https://docs.docker.com/desktop/install/linux-install/).
-    - Test your installation of Docker Desktop.
-      - Open a Terminal (**in Windows be sure to use a WSL Terminal**) and use the command: 
-        ```
-        docker run hello-world
-        ```
-        - You should be able to run this command without `root` or `admin` privileges.
-        - If successful, this command will generate some output containing the following text indicating that it worked correctly:
-          ```
-          Hello from Docker!
-          This message shows that your installation appears to be working correctly.
-          ```
-  - TigerVNC Viewer - Download and install the TigerVNC viewer for your host operating system (Windows, Mac or Linux):
-    - Windows: [vncviewer64-1.12.0.exe](https://sourceforge.net/projects/tigervnc/files/stable/1.12.0/vncviewer64-1.12.0.exe/download)
-    - MacOS: [TigerVNC-1.12.0.dmg](https://sourceforge.net/projects/tigervnc/files/stable/1.12.0/TigerVNC-1.12.0.dmg/download)
-    - Linux: [tigervnc-1.12.0.x86_64.tar.gz](https://sourceforge.net/projects/tigervnc/files/stable/1.12.0/tigervnc-1.12.0.x86_64.tar.gz/download)
+Full installation details for other platforms can be obtained from the projects themselves on the following sites:
+
+  * [Installing git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+  * [Get Docker](https://docs.docker.com/get-docker/)
+  * [Install Compose](https://docs.docker.com/compose/install/)
+
+
+### Linux Docker Configuration ###
+
+If you are developing under Linux you will need to be able to [Manage Docker as a non-root user](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user).  To do so you need to add your user to the `docker` group. Use the following commands:
+
+```
+sudo groupadd docker
+sudo usermod -aG docker $USER
+```
+
+Then log out and back into the system. When you log back in your user will have the permissions needed in order to use docker commands.  Note that if you are developing on a virtual machine you will need to restart the virtual machine for the changes to take effect.
+
 
 ### Getting FarmData2 ###
 
@@ -64,100 +65,43 @@ FarmData2 is hosted in a GitHub repository that can be found here:
 To get started:
 
   1. [Create a GitHub Account](https://github.com/join) (if you do not already have one).
+     - To access GitHub via the command line git tools you will need to [Create a personal access token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) in GitHub.
+     - You will also probably want to [Store your GitHub Credentials with the Git Credential Helper](https://techexpertise.medium.com/storing-git-credentials-with-git-credential-helper-33d22a6b5ce7) to avoid retyping the token for every operation.
   1. [Fork the FarmData2 repository](https://docs.github.com/en/free-pro-team@latest/github/getting-started-with-github/fork-a-repo) into your own GitHub account.
-  1. Open a Terminal (**in Windows be sure to use a WSL Terminal**), then:
-     1. [Clone your fork](https://docs.github.com/en/free-pro-team@latest/github/creating-cloning-and-archiving-repositories/cloning-a-repository) of FarmData2.
-     1. Change your directory to where you have cloned FarmData2 using `cd`.
-     1. [Set your upstream remote](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/configuring-a-remote-for-a-fork) to point to the main [FarmData2 repository](https://github.com/DickinsonCollege/FarmData2) at https://github.com/DickinsonCollege/FarmData2.
-
-### Starting FarmData2 ###
-
-To start FarmData2 
-1. Ensure that Docker Desktop is running on your machine.   
-1. In a Terminal (**in Windows be sure to use a WSL Terminal**):
-   1. Change to the `docker` directory of the FarmData2 repository. 
-   1. Use the command:
-      ```
-      ./fd2-up.bash
-      ```
-      This command will start up the Docker containers that are used by FarmData2. The first time you run this command, there will be lots of output, and it may take a while to complete as it pulls and extracts the necessary docker images to your machine. Be patient, this may take as long as 10-15 minutes depending upon your machine and your internet connection. 
-      
-      You will know the command is complete when the following output appears:
-      ```
-      FarmData2 started.
-      ```
-
-### Connecting to the FarmData2 Development Environment ###
-
-FarmData2 provides a full featured Debian Linux based development environment.  This development environment is automatically running inside one of the Docker containers that was started by the `./fd2-up.bash` script.
-
-**All of the FarmData2 instructions and documentation assume that you are working within this FarmData2 development environment.** 
-
-That said, developers experienced with tools like git, docker and docker-compose should not face any substantial barriers to development directly on Windows, MacOS or other Linux flavors.  There are however a few exceptions where the development environment is required and those are noted in the appropriate places.
-
-#### Connecting via TigerVNC Viewer ####
-
-You can connect to the FarmData2 development environment using the TigerVNC Viewer as follows:
-1. Run your TigerVNC Viewer
-2. Set the "VNC Server" field to: `localhost:5901`
-3. Click "Connect"
-4. If nothing happens and the TigerVNC Viewer quits, wait a moment and try again. It typically takes a few moments for the VNC server in the container to start.
-
-When the TigerVNC Viewer connects to the FarmData2 Development Environment a window like the one below will open displaying the Desktop of the Debian Linux system that is running in the docker container.
-
-![The FarmData2 development environment.](media/DevEnvDesktop.jpg)
-
-#### Connecting via a Browser ####
-
-You can also connect to the FarmData2 development environment using a noVNC client through a web browser. 
-1. Open a web browser on the host OS
-2. Visit the URL: `localhost:6901`
-3. Click "Connect"
-4. Use the NoVNC settings (on the left) to set the "Scaling Mode" to "Remote Resizing"
-
-Note: When accessing the development environment via the browser, copying and pasting between the host OS and the development environment using the noVNC clipboard is tedious. However, if you work entirely inside the development environment it is quite functional.
-
-When the noVNC client connects to the FarmData2 Development environment the Desktop of the Debian Linux system that is running in the docker container will appear in your browser window.
-
-#### Development Environment Credentials ####
-
-Your user credentials within the FarmData2 Development environment are:
-* Username: `fd2dev`
-* Password: `fd2dev`
-
-The only time you are likely to need these credentials is if you use the `sudo` command.
-
-### Configure `git` in the Development Environment ###
-
-Configure the git CLI within the FarmData2 development environment by:
-1. Open a Terminal
-2. `git config --global user.email "you@your.email"`
-3. `git config --global user.name "your github username"`
-4. [Create a personal access token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) in GitHub, if you don't have one already.
-   * Set the "Expiration" to a reasonable duration.
-   * Select the "repo" scope when creating the token.
-   * Copy the token to the clipboard.
-5. `cd FarmData2`
-6. `git push origin main`
-   * Enter your GitHub username
-   * Paste in your personal access token.
-
-Note: The git client in the FarmData2 development environment is set "store" your git credentials. This makes it so you do not have to re-enter your username and personal access token every time you `push`.  The "store" option saves your GitHub password in plain text in your account. This is generally safe if you are using your own computer within a password protected account. The [Store your GitHub Credentials with the Git Credential Helper](https://techexpertise.medium.com/storing-git-credentials-with-git-credential-helper-33d22a6b5ce7) page gives more information about the "store" option and other more secure options for how to manage your git credentials.
+  1. [Clone your fork](https://docs.github.com/en/free-pro-team@latest/github/creating-cloning-and-archiving-repositories/cloning-a-repository) of FarmData2 to your development machine.
+  1. Change your directory to where you have cloned using `cd`.
+  1. [Set your upstream remote](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/configuring-a-remote-for-a-fork) to point to the main [FarmData2 repository](https://github.com/DickinsonCollege/FarmData2) at https://github.com/DickinsonCollege/FarmData2.
 
 ### Install the Sample Database Image ###
 
-The FarmData2 repository contains a sample database with anonymized data from several years of operation of the [Dickinson College Farm](https://www.dickinson.edu/farm). This database is in the compressed file `docker/db.sample.tar.bz2` and needs to be expanded before it can be used. To install the sample database image:
-1. Open a Terminal
-2. `cd FarmData2/docker`
-3. `./setDB.bash sample`
+The FarmData2 repository contains a sample database with anonymized data from several years of operation of the [Dickinson College Farm](https://www.dickinson.edu/farm). This database is in the compressed file `docker/db.sample.tar.bz2` and needs to be expanded before it can be used.  Change into the `docker` directory in the repository and use the command below:
+```
+./setDB.bash sample
+```
 
 When this command completes there should be a `db` directory in the `docker` directory.  The files in this `db` directory are a mySQL database that contain the sample data.  Note that you will only need to do this step once. But the above command can be used at any time to reset the database to its initial state.
 
+### Starting FarmData2 ###
+
+To start FarmData2, ensure that docker is running and you are in the `docker` directory of the repository. Then, use the command below:
+```
+./fd2-up.bash
+```
+
+This command will starts up the docker containers that are used by FarmData2. There will be lots of output from this command and the first time you run it, it may take a while to complete as it pulls, downloads and extracts the docker images to your machine.
+
+If you encounter an error similar to `Cannot start service www`, it can likely be fixed by entering the command
+```
+sudo service apache2 stop
+```
+
+That's it! You now have a running version of FarmData2 that is loaded with the sample data set and is suitable for development work.
+
 ### Logging Into FarmData2 ###
 
-Open a browser within the FarmData2 development environment and go to:
+Open a browser and go to:
 ```
-http://fd2_farmdata2
+http://localhost
 ```
 If everything has worked you will see the FarmData2 login screen.
 
@@ -178,28 +122,24 @@ If everything has worked you will see the FarmData2 login screen.
        * Username: `guest`
        * Password: `farmdata2`
 
-Note: You can also connect to the running FarmData2 instance from a browser in your host OS (e.g. MacOS, Windows, Linux) using the URL:
-```
-http://localhost
-```
-
 ### Editing Code & Documentation ###
 
-The FarmData2 developer environment includes the VSCodium IDE.  This IDE is pre-configured with all of the extensions necessary for FarmData2 development. You can open this IDE and the FarmData2 project by:
-1. Clicking the VSCodium icon dock at the bottom of the desktop.
-2. Choosing "Open Folder" from the "File" menu.
-3. Selecting "FarmData2".
-4. Clicking the "Open" button.
-5. Confirm that you "trust the authors of the files in this folder", if asked.
-6. Choose "Explorer" from the "View" menu to see the `FarmData2` file tree.
+The code and documentation can be edited with any editor.  For convenience, the FarmData2 installation includes a browser-based integrated development environment (IDE). To use this IDE open a browser tab and go to:
+```
+http://localhost:3000
+```
+When the IDE opens:
+  1. Click "Open Workspace"
+  1. Select the `FarmData2` directory
+  1. Click "Open"
 
-Note: You can also choose to use VSCode or VSCodium on your host machine (Mac, Windows, Linux) to edit the contents of the FarmData2 repository that you cloned.  The FarmData2 repository is mounted from your host machine into the development container. Thus, editing these files on the host machine is equivalent to editing them in the development container. If you are using VSCode or VSCodium on your host OS your can refer to the [docker/dev/Dockerfile](docker/dev/Dockerfile) file for information about the VSCodium extensions that are being used by the FarmData2 development environment.
+The explorer on the left will show the contents and structure of the FarmData2 repository. More information about getting started working on the FarmData2 code and documentation can be found in the [CONTRIBUTING](CONTRIBUTING.md) document.
 
 ### Stopping and Starting FarmData2 ###
 
-The above process of installing and setting up the FarmData2 development environment only needs to be completed once.  Once it is completed you will only need to start and stop the docker containers before and after each work session.
+The above process of installing FarmData2 only needs to be completed once.  Now you will need only to start and stop the docker containers before and after each work session.
 
-In a Terminal (a WSL Terminal on windows) change into the `docker` directory in the FarmData2 repository.  From there you can:
+From the `docker` directory in the repository you can:
 
   * Stop FarmData2:
   ```
@@ -211,6 +151,21 @@ In a Terminal (a WSL Terminal on windows) change into the `docker` directory in 
   ./fd2-up.bash
   ```
 
-### What Next? ###
+#### A Note on Persistence ####
 
-You now have a fully operational developer install of FarmData2 including the development environment.  Check out the [CONTRIBUTING Document](CONTRIBUTING.md) for a step-by-step guide for how to make your first contribution to FarmData2.  For other ways to contribute you can check out the [Ways to Contribute Document](docs/WaysToContribute.md).  The [RESOURCES Document](RESOURCES.md) provides a list of more detailed reference information about FarmData2.
+The `fd2-up.bash` and `fd2-down.bash` scripts use `docker-compose` to start all of the FarmData2 containers.  When `./fd2-down.bash` is run `docker-compose` removes all of the containers, including their writeable layers.  The containers are all recreated, including blank writeable layers, each time the `fd2-up.bash` is used. However, all of the FarmData2 data and code is mounted from the development machine and thus will persist between uses. You can find all of the details of the mounted volumes in the `docker-compose.yml` file.
+
+The FarmData2 database, that we expanded earlier, is mounted into the container from the directory:
+  * `docker/db`
+
+The FarmData2 code is mounted into the container from the directories:
+  * `contrib_modules`
+  * `farmdata2_modules`
+
+Changes to the code in these directories on the development machine will be reflected by the instance of FarmData2 running in the container.
+
+#### Availability of phpMyAdmin ####
+
+For developers working on back-end services and the FarmData2 data model the installation starts a phpMyAdmin service that is available at `localhost:8181`.  You can connect to this service as an administrator using the credentials:
+  * Username: `root`
+  * Password: `farm`
